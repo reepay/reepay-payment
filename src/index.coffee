@@ -159,7 +159,7 @@ reFormatCardNumber = (e) ->
   setTimeout =>
     target = e.target
     value   = QJ.val(target)
-    value   = ReepayPayment.fns.formatCardNumber(value)
+    value   = Payment.fns.formatCardNumber(value)
     QJ.val(target, value)
     QJ.trigger(target, 'change')
 
@@ -372,7 +372,7 @@ restrictCVC = (e) ->
 setCardType = (e) ->
   target  = e.target
   val      = QJ.val(target)
-  cardType = ReepayPayment.fns.cardType(val) or 'unknown'
+  cardType = Payment.fns.cardType(val) or 'unknown'
 
   unless QJ.hasClass(target, cardType)
     allTypes = (card.type for card in cards)
@@ -386,7 +386,7 @@ setCardType = (e) ->
 
 # Public
 
-class ReepayPayment
+class Payment
   @fns:
     cardExpiryVal: (value) ->
       value = value.replace(/\s/g, '')
@@ -416,7 +416,7 @@ class ReepayPayment
       if typeof month is 'object' and 'month' of month
         {month, year} = month
       else if typeof month is 'string' and '/' in month
-        {month, year} = ReepayPayment.fns.cardExpiryVal(month)
+        {month, year} = Payment.fns.cardExpiryVal(month)
 
       return false unless month and year
 
@@ -480,13 +480,13 @@ class ReepayPayment
   @restrictNumeric: (el) ->
     QJ.on el, 'keypress', restrictNumeric
   @cardExpiryVal: (el) ->
-    ReepayPayment.fns.cardExpiryVal(QJ.val(el))
+    Payment.fns.cardExpiryVal(QJ.val(el))
   @formatCardCVC: (el) ->
-    ReepayPayment.restrictNumeric el
+    Payment.restrictNumeric el
     QJ.on el, 'keypress', restrictCVC
     el
   @formatCardExpiry: (el) ->
-    ReepayPayment.restrictNumeric el
+    Payment.restrictNumeric el
     if el.length && el.length == 2
       [month, year] = el
       @formatCardExpiryMultiple month, year
@@ -502,7 +502,7 @@ class ReepayPayment
     QJ.on month, 'keypress', formatMonthExpiry
     QJ.on year, 'keypress', restrictYearExpiry
   @formatCardNumber: (el, maxLength) ->
-    ReepayPayment.restrictNumeric el
+    Payment.restrictNumeric el
     QJ.on el, 'keypress', restrictCardNumber(maxLength)
     QJ.on el, 'keypress', formatCardNumber(maxLength)
     QJ.on el, 'keydown', formatBackCardNumber
@@ -522,5 +522,5 @@ class ReepayPayment
         cards.splice(key, 1)
     return true
 
-module.exports = ReepayPayment
-global.ReepayPayment = ReepayPayment
+module.exports = Payment
+global.Payment = Payment
