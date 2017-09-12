@@ -1,5 +1,5 @@
 {
-  "name": "payment",
-  "version": "2.3.0",
-  "main": "dist/payment.js"
+  "name": "reepay-payment",
+  "version": "1.0.0",
+  "main": "dist/reepay-payment.js"
 }
