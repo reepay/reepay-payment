@@ -101,7 +101,7 @@ cards = [
   }
   {
       type: 'visa_dk',
-      pattern: '^4571',
+      pattern: '/^4571/',
       format: defaultFormat,
       length: [16],
       cvcLength: [3],
