@@ -45,7 +45,7 @@ var payment =
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var QJ, ReepayPayment, cardFromNumber, cardFromType, cards, defaultFormat, formatBackCardNumber, formatBackExpiry, formatCardNumber, formatExpiry, formatForwardExpiry, formatForwardSlash, formatMonthExpiry, hasTextSelected, luhnCheck, reFormatCardNumber, restrictCVC, restrictCardNumber, restrictCombinedExpiry, restrictExpiry, restrictMonthExpiry, restrictNumeric, restrictYearExpiry, setCardType,
+	/* WEBPACK VAR INJECTION */(function(global) {var Payment, QJ, cardFromNumber, cardFromType, cards, defaultFormat, formatBackCardNumber, formatBackExpiry, formatCardNumber, formatExpiry, formatForwardExpiry, formatForwardSlash, formatMonthExpiry, hasTextSelected, luhnCheck, reFormatCardNumber, restrictCVC, restrictCardNumber, restrictCombinedExpiry, restrictExpiry, restrictMonthExpiry, restrictNumeric, restrictYearExpiry, setCardType,
 	  indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 	QJ = __webpack_require__(1);
@@ -63,6 +63,13 @@ var payment =
 	  }, {
 	    type: 'dankort',
 	    pattern: /^5019/,
+	    format: defaultFormat,
+	    length: [16],
+	    cvcLength: [3],
+	    luhn: true
+	  }, {
+	    type: 'ffx',
+	    pattern: /^600722/,
 	    format: defaultFormat,
 	    length: [16],
 	    cvcLength: [3],
@@ -139,7 +146,7 @@ var payment =
 	    luhn: true
 	  }, {
 	    type: 'visa_dk',
-	    pattern: '^4571',
+	    pattern: /^4571/,
 	    format: defaultFormat,
 	    length: [16],
 	    cvcLength: [3],
@@ -217,7 +224,7 @@ var payment =
 	      var target, value;
 	      target = e.target;
 	      value = QJ.val(target);
-	      value = ReepayPayment.fns.formatCardNumber(value);
+	      value = Payment.fns.formatCardNumber(value);
 	      QJ.val(target, value);
 	      return QJ.trigger(target, 'change');
 	    };
@@ -478,7 +485,7 @@ var payment =
 	  var allTypes, card, cardType, target, val;
 	  target = e.target;
 	  val = QJ.val(target);
-	  cardType = ReepayPayment.fns.cardType(val) || 'unknown';
+	  cardType = Payment.fns.cardType(val) || 'unknown';
 	  if (!QJ.hasClass(target, cardType)) {
 	    allTypes = (function() {
 	      var j, len, results;
@@ -497,10 +504,10 @@ var payment =
 	  }
 	};
 
-	ReepayPayment = (function() {
-	  function ReepayPayment() {}
+	Payment = (function() {
+	  function Payment() {}
 
-	  ReepayPayment.fns = {
+	  Payment.fns = {
 	    cardExpiryVal: function(value) {
 	      var month, prefix, ref, year;
 	      value = value.replace(/\s/g, '');
@@ -534,7 +541,7 @@ var payment =
 	      if (typeof month === 'object' && 'month' in month) {
 	        ref = month, month = ref.month, year = ref.year;
 	      } else if (typeof month === 'string' && indexOf.call(month, '/') >= 0) {
-	        ref1 = ReepayPayment.fns.cardExpiryVal(month), month = ref1.month, year = ref1.year;
+	        ref1 = Payment.fns.cardExpiryVal(month), month = ref1.month, year = ref1.year;
 	      }
 	      if (!(month && year)) {
 	        return false;
@@ -606,23 +613,23 @@ var payment =
 	    }
 	  };
 
-	  ReepayPayment.restrictNumeric = function(el) {
+	  Payment.restrictNumeric = function(el) {
 	    return QJ.on(el, 'keypress', restrictNumeric);
 	  };
 
-	  ReepayPayment.cardExpiryVal = function(el) {
-	    return ReepayPayment.fns.cardExpiryVal(QJ.val(el));
+	  Payment.cardExpiryVal = function(el) {
+	    return Payment.fns.cardExpiryVal(QJ.val(el));
 	  };
 
-	  ReepayPayment.formatCardCVC = function(el) {
-	    ReepayPayment.restrictNumeric(el);
+	  Payment.formatCardCVC = function(el) {
+	    Payment.restrictNumeric(el);
 	    QJ.on(el, 'keypress', restrictCVC);
 	    return el;
 	  };
 
-	  ReepayPayment.formatCardExpiry = function(el) {
+	  Payment.formatCardExpiry = function(el) {
 	    var month, year;
-	    ReepayPayment.restrictNumeric(el);
+	    Payment.restrictNumeric(el);
 	    if (el.length && el.length === 2) {
 	      month = el[0], year = el[1];
 	      this.formatCardExpiryMultiple(month, year);
@@ -636,14 +643,14 @@ var payment =
 	    return el;
 	  };
 
-	  ReepayPayment.formatCardExpiryMultiple = function(month, year) {
+	  Payment.formatCardExpiryMultiple = function(month, year) {
 	    QJ.on(month, 'keypress', restrictMonthExpiry);
 	    QJ.on(month, 'keypress', formatMonthExpiry);
 	    return QJ.on(year, 'keypress', restrictYearExpiry);
 	  };
 
-	  ReepayPayment.formatCardNumber = function(el, maxLength) {
-	    ReepayPayment.restrictNumeric(el);
+	  Payment.formatCardNumber = function(el, maxLength) {
+	    Payment.restrictNumeric(el);
 	    QJ.on(el, 'keypress', restrictCardNumber(maxLength));
 	    QJ.on(el, 'keypress', formatCardNumber(maxLength));
 	    QJ.on(el, 'keydown', formatBackCardNumber);
@@ -653,20 +660,20 @@ var payment =
 	    return el;
 	  };
 
-	  ReepayPayment.getCardArray = function() {
+	  Payment.getCardArray = function() {
 	    return cards;
 	  };
 
-	  ReepayPayment.setCardArray = function(cardArray) {
+	  Payment.setCardArray = function(cardArray) {
 	    cards = cardArray;
 	    return true;
 	  };
 
-	  ReepayPayment.addToCardArray = function(cardObject) {
+	  Payment.addToCardArray = function(cardObject) {
 	    return cards.push(cardObject);
 	  };
 
-	  ReepayPayment.removeFromCardArray = function(type) {
+	  Payment.removeFromCardArray = function(type) {
 	    var key, value;
 	    for (key in cards) {
 	      value = cards[key];
@@ -677,13 +684,13 @@ var payment =
 	    return true;
 	  };
 
-	  return ReepayPayment;
+	  return Payment;
 
 	})();
 
-	module.exports = ReepayPayment;
+	module.exports = Payment;
 
-	global.ReepayPayment = ReepayPayment;
+	global.Payment = Payment;
 
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 

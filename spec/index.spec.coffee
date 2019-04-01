@@ -217,11 +217,15 @@ describe 'payment', ->
 
     it 'that begins with 5 should return MasterCard', ->
       topic = Payment.fns.cardType '5555555555554444'
-      assert.equal topic, 'mastercard'
+      assert.equal topic, 'mc'
 
     it 'that begins with 2 should return MasterCard', ->
       topic = Payment.fns.cardType '2221000010000015'
-      assert.equal topic, 'mastercard'
+      assert.equal topic, 'mc'
+
+    it 'that begins with 600722 should return FFX', ->
+      topic = Payment.fns.cardType '6007220000000004'
+      assert.equal topic, 'ffx'
 
     it 'that begins with 34 should return American Express', ->
       topic = Payment.fns.cardType '3412121212121212'
