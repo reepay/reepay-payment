@@ -4,10 +4,10 @@ delete webpackConfig.externals
 delete webpackConfig.entry
 delete webpackConfig.output
 
-webpackConfig.postLoaders = [{ test: /\.(js|coffee)$/,
+/* webpackConfig.postLoaders = [{ test: /\.(js|coffee)$/,
   exclude: /(spec|node_modules)\//,
   loader: 'istanbul-instrumenter'
-}]
+}] */
 
 module.exports = function(config) {
   config.set({
@@ -20,8 +20,7 @@ module.exports = function(config) {
       'tests.bundle.js': ['webpack', 'sourcemap']
     },
     reporters: [
-      'dots',
-      'coverage'
+      'progress'
     ],
     port: 9876,
     colors: true,
@@ -34,9 +33,9 @@ module.exports = function(config) {
     webpackMiddleware: {
       noInfo: false
     },
-    coverageReporter: {
-      type: 'lcov',
-      dir: 'coverage/'
-    },
+    coverageIstanbulReporter: {
+      dir: require('path').join(__dirname, 'coverage'), reports: [ 'html', 'lcovonly' ],
+      fixWebpackSourcePaths: true
+    }
   })
 }
