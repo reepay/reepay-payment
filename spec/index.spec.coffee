@@ -58,8 +58,8 @@ describe 'payment', ->
       assert(Payment.fns.validateCardNumber('3530111333300000'), 'jcb')
       assert(Payment.fns.validateCardNumber('3566002020360505'), 'jcb')
     it 'should validate mastercard card types', ->
-      assert(Payment.fns.validateCardNumber('5555555555554444'), 'mastercard')
-      assert(Payment.fns.validateCardNumber('2221000010000015'), 'mastercard')
+      assert(Payment.fns.validateCardNumber('5555555555554444'), 'mc')
+      assert(Payment.fns.validateCardNumber('2221000010000015'), 'mc')
     it 'should validate visa card types', ->
       assert(Payment.fns.validateCardNumber('4111111111111111'), 'visa')
       assert(Payment.fns.validateCardNumber('4012888888881881'), 'visa')
@@ -217,11 +217,15 @@ describe 'payment', ->
 
     it 'that begins with 5 should return MasterCard', ->
       topic = Payment.fns.cardType '5555555555554444'
-      assert.equal topic, 'mastercard'
+      assert.equal topic, 'mc'
 
     it 'that begins with 2 should return MasterCard', ->
       topic = Payment.fns.cardType '2221000010000015'
-      assert.equal topic, 'mastercard'
+      assert.equal topic, 'mc'
+
+    it 'that begins with 600722 should return FFX', ->
+      topic = Payment.fns.cardType '6007220000000004'
+      assert.equal topic, 'ffx'
 
     it 'that begins with 34 should return American Express', ->
       topic = Payment.fns.cardType '3412121212121212'
