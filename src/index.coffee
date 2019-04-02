@@ -20,7 +20,7 @@ cards = [
       luhn: true
   }
   {
-      type: 'ffx',
+      type: 'ffk',
       pattern: /^600722/,
       format: defaultFormat,
       length: [16],
